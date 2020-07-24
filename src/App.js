@@ -1,5 +1,7 @@
-import React from 'react';
+import React,{useState, useEffect} from 'react';
 import  styled from '@emotion/styled';
+import Quote from './components/Quote';
+import Logo from './logo.svg';
 
 const Container = styled.div`
   display:flex;
@@ -17,15 +19,31 @@ margin-top:3rem;
 padding: 1rem 3rem;
 font-size: 2rem;
 border: 1px solid black;
+
+  &:hover{
+    cursor:pointer;
+    font-weight:bold;
+  }
 `;
 
 function App() {
 
-  const getCite = () =>{
-  console.log('getting');
+  const [quote, getQuote] = useState({});
+
+  const getCite = async () =>{
+    const api = await fetch('https://breaking-bad-quotes.herokuapp.com/v1/quotes');
+    const quote = await api.json();
+   getQuote(quote[0]);
   };
+
+  useEffect(() =>{
+    getCite();
+  },[]);
+
   return (
     <Container>
+      <img className="img-cite" src={Logo} alt="img-breaking-bad"/>
+      <Quote quote={quote}/>
       <Button
       onClick={getCite}
       > Get cite</Button>
